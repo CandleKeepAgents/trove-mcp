@@ -1,0 +1,126 @@
+name: Validate
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Parse JSON manifests
+        run: |
+          set -euo pipefail
+          for f in \
+            .claude-plugin/marketplace.json \
+            plugins/trove-cowork/.claude-plugin/plugin.json \
+            plugins/trove-cowork/.mcp.json \
+            chatgpt/plugin.json \
+            chatgpt/mcp.json
+          do
+            jq empty "$f" || { echo "::error file=$f::invalid JSON"; exit 1; }
+          done
+          echo "All manifests parse"
+
+      - name: Check nested plugin layout
+        run: |
+          set -euo pipefail
+          # Same required entries cowork-plugin-deploy.yml checks in the zip.
+          # Cowork installs this as a plugin package, which only has a
+          # manifest (and so only registers the sub-agents and the MCP
+          # connector) in the nested layout. Do not flatten it.
+          cd plugins/trove-cowork
+          for REQUIRED in \
+            .claude-plugin/plugin.json \
+            .mcp.json \
+            skills/trove/SKILL.md \
+            skills/setup/SKILL.md \
+            agents/librarian.md \
+            agents/item-reader.md \
+            agents/book-writer.md \
+            agents/book-enricher.md \
+            README.md \
+            LICENSE
+          do
+            [ -f "$REQUIRED" ] || { echo "::error::plugins/trove-cowork is missing $REQUIRED"; exit 1; }
+          done
+          # Skill discovery scans skills/*/SKILL.md only; any other file name
+          # in a skill folder never loads.
+          for DIR in skills/*/; do
+            [ -f "${DIR}SKILL.md" ] || { echo "::error::${DIR} has no SKILL.md"; exit 1; }
+          done
+          # The directory blocks OS metadata files in the plugin folder.
+          if find . -name '.DS_Store' -o -name 'Thumbs.db' -o -name 'desktop.ini' -o -name '__MACOSX' | grep -q .; then
+            echo "::error::plugins/trove-cowork contains OS metadata files"; exit 1
+          fi
+          echo "Nested layout verified"
+
+      - name: Check manifest values
+        run: |
+          set -euo pipefail
+          PLUGIN=plugins/trove-cowork/.claude-plugin/plugin.json
+          MCP=plugins/trove-cowork/.mcp.json
+          MARKET=.claude-plugin/marketplace.json
+
+          [ "$(jq -r '.name' "$PLUGIN")" = "trove-cowork" ] || { echo "::error::plugin.json name must be trove-cowork"; exit 1; }
+          [ "$(jq -r '.name' "$MARKET")" = "trove" ] || { echo "::error::marketplace name must be trove"; exit 1; }
+          [ "$(jq -r '.mcpServers.trove.url' "$MCP")" = "https://heytrove.ai/api/v1/mcp" ] \
+            || { echo "::error::.mcp.json must declare server 'trove' at https://heytrove.ai/api/v1/mcp"; exit 1; }
+          [ "$(jq -r '.mcpServers | keys | length' "$MCP")" = "1" ] \
+            || { echo "::error::.mcp.json must declare exactly one server"; exit 1; }
+
+          # Every marketplace source must resolve to a plugin manifest.
+          for SRC in $(jq -r '.plugins[].source' "$MARKET"); do
+            SRC="${SRC#./}"
+            [ -f "$SRC/.claude-plugin/plugin.json" ] || { echo "::error::marketplace source has no manifest: $SRC"; exit 1; }
+          done
+
+          # Consistent versioning is the most common directory rejection.
+          PV=$(jq -r '.version' "$PLUGIN")
+          MV=$(jq -r '.plugins[] | select(.name == "trove-cowork") | .version // empty' "$MARKET")
+          if [ -n "$MV" ] && [ "$MV" != "$PV" ]; then
+            echo "::error::marketplace.json lists trove-cowork $MV but plugin.json is $PV"; exit 1
+          fi
+          HEAD=$(grep -m1 -oE '^## [0-9]+\.[0-9]+\.[0-9]+' plugins/trove-cowork/CHANGELOG.md | cut -c4-)
+          [ "$HEAD" = "$PV" ] || { echo "::error::CHANGELOG top entry is $HEAD but plugin.json is $PV"; exit 1; }
+          CV=$(jq -r '.version' chatgpt/plugin.json)
+          [ "$CV" = "$PV" ] || { echo "::error::chatgpt/plugin.json is $CV but plugin.json is $PV"; exit 1; }
+          echo "Manifest values consistent at $PV"
+
+      - name: Check for old brand names
+        run: |
+          set -euo pipefail
+          # Allowed: CHANGELOG files, the GitHub org name, and the agreed
+          # bridge lines that say CandleKeep is Trove's former name.
+          HITS=$(grep -rniE 'candlekeep|getcandlekeep' . \
+                   --exclude-dir=.git \
+                   --exclude=CHANGELOG.md \
+                   --exclude=validate.yml \
+                 | sed -E 's/CandleKeepAgents//g' \
+                 | grep -iE 'candlekeep' \
+                 | grep -viE 'former name of Trove|formerly called CandleKeep|succeeds .?candlekeep-cowork' \
+                 || true)
+          if [ -n "$HITS" ]; then
+            echo "::error::old brand name found outside the allowed places:"
+            echo "$HITS"
+            exit 1
+          fi
+          echo "No stray old brand names"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: claude plugin validate
+        run: |
+          set -euo pipefail
+          # Pinned: the directory holds unpinned launchers, and a pin keeps CI
+          # reproducible. Raise it deliberately.
+          npm install -g @anthropic-ai/claude-code@2.1.285
+          claude plugin validate --strict ./plugins/trove-cowork
+          claude plugin validate --strict .
