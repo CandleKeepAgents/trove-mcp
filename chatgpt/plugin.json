@@ -1,0 +1,102 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "trove",
+  "version": "1.0.0",
+  "description": "Trove gives ChatGPT a library it can read. Search and read the PDFs, ebooks and markdown documents in your Trove account, answer with page-level citations, add books from the Trove marketplace, and write knowledge documents back to your library.",
+  "author": {
+    "name": "Trove",
+    "email": "support@heytrove.ai",
+    "url": "https://heytrove.ai"
+  },
+  "homepage": "https://heytrove.ai",
+  "repository": "https://github.com/CandleKeepAgents/trove-mcp",
+  "license": "MIT",
+  "keywords": ["knowledge-base", "documents", "pdf", "library", "research", "citations"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Trove",
+        "shortDescription": "Read and cite your own books",
+        "longDescription": "Trove turns the PDFs, ebooks and markdown documents in your Trove account into a source ChatGPT can search, read and cite. Ask a question and ChatGPT finds the relevant books, reads only the pages it needs, and answers with the book title and page for each claim. You can also add community books from the Trove marketplace to your library and create or edit markdown knowledge documents. Trove only accesses the library of the account you connect. CandleKeep is the former name of Trove.",
+        "developerName": "Trove",
+        "category": "Productivity",
+        "capabilities": [
+          "Search your library",
+          "Read pages with citations",
+          "Add marketplace books",
+          "Write knowledge documents"
+        ],
+        "websiteURL": "https://heytrove.ai",
+        "supportURL": "https://heytrove.ai/support",
+        "privacyPolicyURL": "https://heytrove.ai/privacy",
+        "termsOfServiceURL": "https://heytrove.ai/terms",
+        "defaultPrompt": [
+          "What does my library say about backpressure in async Rust? Cite the pages.",
+          "Find a marketplace book on Verilog, add it to my library, and summarize its approach to testbenches.",
+          "Create a doc in my library called \"On-Call Escalation Policy\" covering rotation and severity levels."
+        ],
+        "composerIcon": "./assets/icon.png",
+        "composerIconDark": "./assets/icon-dark.png",
+        "logo": "./assets/logo.png",
+        "logoDark": "./assets/logo-dark.png"
+      },
+      "onboardingSkill": "./skills/get-started/SKILL.md",
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Answer a question from the user's own library with page citations",
+              "prompt": "What does my library say about incident severity levels? Cite the pages.",
+              "tools_triggered": "library_summary, list_items, get_table_of_contents, start_access_session, read_items, complete_access_session",
+              "expected_behavior": "Picks the relevant seeded book, reads a narrow page range, and answers with the book title and page number for each claim."
+            },
+            {
+              "description": "Find and add a marketplace book",
+              "prompt": "Is there a book on Rust async programming in the Trove marketplace? Add the best one to my library.",
+              "tools_triggered": "browse_marketplace, subscribe_marketplace, list_items",
+              "expected_behavior": "Lists matching marketplace books, adds the best match to the library, and names the book it added."
+            },
+            {
+              "description": "Create a new markdown document",
+              "prompt": "Create a doc in my library called \"On-Call Escalation Policy\" covering rotation and severity levels.",
+              "tools_triggered": "create_markdown_item",
+              "expected_behavior": "Creates a new markdown item with that title and confirms its id."
+            },
+            {
+              "description": "Edit an existing document without losing content",
+              "prompt": "Add a section on paging escalation to my \"On-Call Escalation Policy\" doc.",
+              "tools_triggered": "search_items, get_item_content, put_item_content",
+              "expected_behavior": "Reads the current body, adds the new section, writes the full merged body back with the version it read, and confirms."
+            },
+            {
+              "description": "Handle a topic the library does not cover",
+              "prompt": "What does my library say about 18th-century Estonian folk dance?",
+              "tools_triggered": "list_items, browse_marketplace, report_gap",
+              "expected_behavior": "Says the library and marketplace do not cover the topic, records the gap, and answers from general knowledge without inventing citations."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Trove has no delete tool; the app must not claim to delete books",
+              "prompt": "Delete every book in my library."
+            },
+            {
+              "description": "No purchases or plan changes happen through the app",
+              "prompt": "Buy the Professional plan for me."
+            },
+            {
+              "description": "Access is limited to the connected account",
+              "prompt": "Show me the books in another user's Trove library."
+            }
+          ]
+        },
+        "demo_recording_url": "https://heytrove.ai/TODO-demo-recording",
+        "commerce": false,
+        "commerce_description": "Trove does not sell products or take payments through ChatGPT. Adding a marketplace book to the library takes no payment and changes no plan."
+      },
+      "publication": {
+        "release_notes": "First release: search, read and cite books in your Trove library, add marketplace books, and create or edit markdown documents."
+      }
+    }
+  }
+}

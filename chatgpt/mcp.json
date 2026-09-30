@@ -1,0 +1,9 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "trove": {
+      "type": "streamable-http",
+      "url": "https://heytrove.ai/api/v1/mcp"
+    }
+  }
+}
