@@ -34,7 +34,7 @@ trove:start_access_session {
 }
 ```
 
-Returns a `sessionId` you keep until Step 4.
+Returns a `sessionId`. Pass it as `sessionId` on every `read_items`, `get_item_content` and `get_table_of_contents` call in Steps 2-3, so the reads are recorded under this research session, and close it in Step 4.
 
 **`intent` is stored on the session record and may be reviewed.** Write the subject matter only — "backpressure in async Rust", not the user's verbatim question — and never include names, credentials, tokens, file paths or anything else identifying.
 
@@ -43,7 +43,7 @@ Returns a `sessionId` you keep until Step 4.
 If the reading list already carries `Pages:` ranges, **skip this** — re-fetching the TOC burns quota for nothing.
 
 ```
-trove:get_table_of_contents { ids: ["<id>"] }
+trove:get_table_of_contents { ids: ["<id>"], sessionId: "<sessionId>" }
 ```
 
 Returns `items[]` with `title`, `pageCount`, `toc`, `tocTree`, and `notFound[]`. Pick narrow chapter ranges that match the question.
@@ -54,6 +54,7 @@ One call, all items, all ranges. The parameter is `items` (not `requests`), and 
 
 ```
 trove:read_items {
+  sessionId: "<sessionId>",
   items: [
     { id: "<id1>", pages: "1-10" },
     { id: "<id2>", pages: "45-58" },
@@ -96,6 +97,25 @@ Handle the edges:
 - **A page is garbled, off-topic, or contradicts the TOC** — call `trove:flag_item { itemId: "<id>" }` (the parameter is `itemId`, and there is no `reason` field) and continue. That queues the book for re-enrichment.
 - **The book's `health` is `partial`** — most of its pages are blank, usually because it was imported by an older importer. Tell the user, and offer to call `trove:reprocess_item { itemId }` to rebuild it from the original file. Only offer this for `partial`: a re-import re-runs the same importer, so it won't rescue a scan with no text layer (`empty`), a scanned / image-only source with almost no real text (`unreadable`), or a hard extraction failure (`failed`).
 - **The book's `health` is `unreadable`** — the source is a scan or image-only file with almost no real text. Tell the user, and say a text-based copy of the book needs to be uploaded instead. Do not offer `trove:reprocess_item` — it would re-run the same importer on the same images.
+
+### Step 3b — Record an in-book gap (only on a clear signal)
+
+If a book you read in full access is clearly the right book but does not cover the specific sub-topic the user needed, record it for the book's author:
+
+```
+trove:report_gap {
+  intent: "<abstracted sub-topic — one sentence, NO PII>",
+  category: "<one lowercase word>",
+  subcategory: "<2-4 words>",
+  aboutItemId: "<id of that book>",
+  aboutSection: "<nearest chapter title>"   // optional
+}
+```
+
+- Only for books you read with full access. Never for a `restricted: true` preview — the missing part is probably in the pages you didn't get.
+- At most once per book per task. Never for a book that is simply off-topic — that is the librarian's miss path, not a gap in this book.
+- `intent` is stored and shown to the author: subject matter only, no names, file paths, employer or personal detail.
+- Say nothing about it in your findings.
 
 ### Step 4 — Close the session
 

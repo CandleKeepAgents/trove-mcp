@@ -69,32 +69,52 @@ The OpenAI package format discovers skills in `skills/`. It has no sub-agents. T
 Server URL: `https://heytrove.ai/api/v1/mcp` (streamable HTTP).
 
 - [ ] **TODO — domain verification.** OpenAI gives a challenge token. Serve it at `https://heytrove.ai/.well-known/openai-apps-challenge`. The webapp has no route for this path now. Add one that returns the token from an environment variable.
-- [ ] **TODO — tool annotations.** OpenAI requires three explicit boolean values on each tool: `readOnlyHint`, `destructiveHint`, `openWorldHint`. The server does not send annotations now (the MCP route passes only `title`, `description`, `inputSchema` to `registerTool`). Add them. Use these values, and set the values for each new tool in the same way:
+- [x] **Tool annotations — done.** OpenAI requires three explicit boolean values on each tool: `readOnlyHint`, `destructiveHint`, `openWorldHint`. The server sends all four hints (with `idempotentHint`) on each of its 38 tools. Values as the server sends them ("new" marks the 20 tools added in 1.1.0). When the server gets a new tool, add a row here:
 
-| Tool | readOnlyHint | destructiveHint | openWorldHint |
-|---|---|---|---|
-| `whoami` | true | false | false |
-| `library_summary` | true | false | false |
-| `list_items` | true | false | false |
-| `search_items` | true | false | false |
-| `get_table_of_contents` | true | false | false |
-| `read_items` | true | false | false |
-| `get_item_content` | true | false | false |
-| `put_item_content` | false | true (replaces the full body) | false |
-| `create_markdown_item` | false | false | false |
-| `enrich_item` | false | true (overwrites metadata) | false |
-| `flag_item` | false | false | false |
-| `reprocess_item` | false | true (rebuilds the pages) | false |
-| `start_access_session` | false | false | false |
-| `complete_access_session` | false | false | false |
-| `browse_marketplace` | true | false | true (public community listings) |
-| `subscribe_marketplace` | false | false | false |
-| `report_gap` | false | false | false |
-| `suggest_book` | false | false | false |
+| Tool | readOnlyHint | idempotentHint | destructiveHint | openWorldHint | |
+|---|---|---|---|---|---|
+| `whoami` | true | true | false | false |  |
+| `library_summary` | true | true | false | false |  |
+| `list_items` | true | true | false | false |  |
+| `search_items` | true | true | false | false |  |
+| `get_table_of_contents` | true | true | false | false |  |
+| `read_items` | true | true | false | false |  |
+| `get_item_content` | true | true | false | false |  |
+| `list_item_versions` | true | true | false | false | new |
+| `list_shelves` | true | true | false | false | new |
+| `get_shelf` | true | true | false | false | new |
+| `list_manuscripts` | true | true | false | false | new |
+| `list_book_gaps` | true | true | false | false | new |
+| `browse_marketplace` | true | true | false | true |  |
+| `create_markdown_item` | false | false | false | false |  |
+| `append_item_pages` | false | false | false | false | new |
+| `create_shelf` | false | false | false | false | new |
+| `create_manuscript` | false | false | false | false | new |
+| `start_access_session` | false | false | false | false |  |
+| `report_gap` | false | false | false | false |  |
+| `flag_item` | false | true | false | false |  |
+| `update_shelf` | false | true | false | false | new |
+| `add_to_shelf` | false | true | false | false | new |
+| `update_manuscript` | false | true | false | false | new |
+| `resolve_book_gap` | false | true | false | false | new |
+| `restore_book_gap` | false | true | false | false | new |
+| `complete_access_session` | false | true | false | false |  |
+| `subscribe_marketplace` | false | true | false | false |  |
+| `suggest_book` | false | true | false | false |  |
+| `put_item_content` | false | false | true | false |  |
+| `reprocess_item` | false | false | true | false |  |
+| `unsubscribe_marketplace` | false | false | true | false | new |
+| `enrich_item` | false | true | true | false |  |
+| `put_item_page` | false | true | true | false | new |
+| `restore_item_version` | false | true | true | false | new |
+| `delete_items` | false | true | true | false | new |
+| `delete_shelf` | false | true | true | false | new |
+| `remove_from_shelf` | false | true | true | false | new |
+| `archive_manuscript` | false | true | true | false | new |
 
 - [ ] **Result shape.** Each tool must return `structuredContent` (concise data for the model) and `content`. Data that only the client uses goes in `_meta`. The server sends `structuredContent` and `content` now. OpenAI also lists an output schema for each tool that returns structured data; the server declares none. **TODO:** add `outputSchema` to each tool, and make sure that each result agrees with it. Source: <https://developers.openai.com/apps-sdk/build/mcp-server>.
 - [ ] UI widgets are optional. Trove submits as a data-only app, so it needs no `_meta.ui.resourceUri`, no HTML resource and no CSP.
-- [ ] **TODO — server instructions.** Add an `instructions` string to the MCP server (OpenAI recommends 512 characters or fewer). ChatGPT reads it for each connection. Put the main workflow in it: orient, list, table of contents, narrow read, cite. Tool descriptions must describe what the tool does. They must not tell the model to call other tools or to promote a product.
+- [x] **Server instructions — done.** The server sends an `instructions` string (approximately 1,600 characters). OpenAI recommends 512 characters or fewer; this is a recommendation, not a check. Keep the main workflow in the first 500 characters, because a client can shorten the text. Tool descriptions must describe what the tool does. They must not tell the model to call other tools or to promote a product.
 - [ ] **TODO — upgrade text in tool results.** The guidelines prohibit plan offers, upgrade prompts, and links to checkout pages in the app. Tool results now contain `upgradeUrl` (`/billing`) and "Upgrade to Professional" text. Remove these when the client is ChatGPT. You can identify the client from the OAuth client that ChatGPT registers, or from `clientInfo.name` in `initialize`. A link to an informational plans page is permitted.
 - [ ] Check that no tool result contains session IDs, trace IDs or diagnostic metadata that the user did not ask for. `start_access_session` must return its `sessionId`, because `complete_access_session` needs it.
 

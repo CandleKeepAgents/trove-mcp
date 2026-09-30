@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "trove",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Trove gives ChatGPT a library it can read. Search and read the PDFs, ebooks and markdown documents in your Trove account, answer with page-level citations, add books from the Trove marketplace, and write knowledge documents back to your library.",
   "author": {
     "name": "Trove",
@@ -77,8 +77,8 @@
           ],
           "negative": [
             {
-              "description": "Trove has no delete tool; the app must not claim to delete books",
-              "prompt": "Delete every book in my library."
+              "description": "Out of scope: Trove does not send email or messages",
+              "prompt": "Email this summary to my team."
             },
             {
               "description": "No purchases or plan changes happen through the app",
@@ -95,7 +95,7 @@
         "commerce_description": "Trove does not sell products or take payments through ChatGPT. Adding a marketplace book to the library takes no payment and changes no plan."
       },
       "publication": {
-        "release_notes": "First release: search, read and cite books in your Trove library, add marketplace books, and create or edit markdown documents."
+        "release_notes": "Search, read and cite books in your Trove library, add and remove marketplace books, create and edit markdown documents page by page, undo edits from version history, delete books, and manage shelves, manuscripts and reader requests."
       }
     }
   }

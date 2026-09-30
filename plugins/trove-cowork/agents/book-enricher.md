@@ -45,8 +45,8 @@ Otherwise continue.
 ### Step 2 — Read the front of the book
 
 ```
-trove:start_access_session { intent: "metadata enrichment" }
-trove:read_items { items: [{ id: "<id>", pages: "1-10" }] }
+trove:start_access_session { intent: "metadata enrichment" }     // returns sessionId
+trove:read_items { sessionId: "<sessionId>", items: [{ id: "<id>", pages: "1-10" }] }
 ```
 
 Note the parameter names: `items` (not `requests`), and `pages` is a range **string**.
@@ -67,7 +67,7 @@ PDF page numbers and printed page numbers usually differ — front matter takes 
 2. Note the `page_num` that page came back as.
 3. `offset = page_num - printedPage`. Add this to every TOC entry's printed page number to get the PDF page you store.
 
-Verify before submitting: pick 3 TOC entries (first, middle, last) and `read_items` at the calculated pages. If the chapter heading isn't there, recalculate. If you can't resolve it within 3 verification reads, skip the TOC.
+Verify before submitting: pick 3 TOC entries (first, middle, last) and `read_items` (with the same `sessionId`) at the calculated pages. If the chapter heading isn't there, recalculate. If you can't resolve it within 3 verification reads, skip the TOC.
 
 ### Step 4 — Close the session
 
@@ -95,6 +95,8 @@ trove:enrich_item {
 The identifier parameter is **`itemId`**, not `id`. Include only the fields you actually extracted — omit anything you couldn't verify, since omitted fields are left untouched. Every `toc` entry needs a non-empty `title` and a `page` >= 1; `level` is optional.
 
 Optionally you may also pass `sampleQuestion: "<a question this book answers well>"` — it shows up in the library UI as a starting prompt. Only add one if the book's subject is unmistakable.
+
+You may also pass `outcomes: ["<what a reader gets>", …]` — a short "what you'll get" list, each item 140 characters or fewer. It **replaces** the existing list (an empty array clears it), so pass it only when the book has none or the current one is clearly wrong.
 
 ### Confidence scale
 

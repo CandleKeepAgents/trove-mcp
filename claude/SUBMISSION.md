@@ -42,7 +42,7 @@ The CI workflow `.github/workflows/validate.yml` does the local checks. The port
 | `description`, `author`, `version` are set | Yes |
 | README of 40 words or more in the plugin folder | Yes: `plugins/trove-cowork/README.md` |
 | LICENSE in the plugin folder | Yes: MIT, holder Trove |
-| Consistent versions | Yes: `plugin.json`, `marketplace.json`, the CHANGELOG top entry and `chatgpt/plugin.json` are all 1.0.0. CI fails if they differ. |
+| Consistent versions | Yes: `plugin.json`, `marketplace.json`, the CHANGELOG top entry and `chatgpt/plugin.json` are all the same version (now 1.1.0). CI fails if they differ. |
 | Remote MCP server has `type: http` and an `https://` URL | Yes |
 | No `.DS_Store` or other OS files | CI fails if one is present. |
 | No hooks, scripts, launchers or lockfiles | Yes. The plugin is only Markdown and JSON, so nothing is held for a reviewer for this reason. |
@@ -54,9 +54,9 @@ Name risk: the portal holds a name that is only generic words. "Trove" is a dict
 
 ## 3. Connector checks
 
-- [ ] **TODO — tool annotations.** Each tool must have a `title` and the applicable `readOnlyHint` or `destructiveHint`. All tools have a `title` now, but the server sends no annotations. The portal flags each tool that has no annotations. Use the same values as in `chatgpt/SUBMISSION.md`, section 5. In Claude, read-only tools run without a confirmation for each call, and destructive tools always ask.
+- [x] **Tool annotations — done.** Each tool must have a `title` and the applicable `readOnlyHint` or `destructiveHint`. The server sends a `title` and all four hints on each of its 38 tools. The values are in `chatgpt/SUBMISSION.md`, section 5. In Claude, read-only tools run without a confirmation for each call, and destructive tools always ask.
 - [ ] **TODO — tool descriptions.** A description must tell what the tool does. It must not tell Claude how to behave, and it must not promote a product. Examine these:
-  - `library_summary` says "Call this first on every research task". Change it to a statement of what the tool returns.
+  - `library_summary` no longer says "Call this first on every research task". Done.
   - Tool results that contain "Upgrade to Professional" text and `upgradeUrl`. Anthropic prohibits promotion in tool descriptions. Keep upgrade text to plain limit messages.
 - [ ] Tool names are 64 characters or fewer. Yes.
 - [ ] Tool results must be less than approximately 150,000 characters (claude.ai, Desktop, Cowork) and 25,000 tokens (Claude Code, default). A tool call must end in 240 seconds. Source: <https://claude.com/docs/connectors/building>. Examine `list_items`, `read_items` and `get_item_content` on a large library.

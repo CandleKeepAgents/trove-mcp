@@ -43,9 +43,9 @@ The four subagents:
 
 | Subagent | What it does |
 |---|---|
-| **librarian** | Finds books. Lists your library, browses the marketplace, subscribes to relevant listings, pulls tables of contents, and returns a short reading list of book ids + page ranges. Never reads pages. If nothing relevant exists, it reports the gap and can suggest a book worth adding. |
-| **item-reader** | Reads the pages on that reading list, opens and closes the access session, and returns findings with citations to specific pages. |
-| **book-writer** | Creates and edits markdown books in your library — new knowledge docs, new chapters, revisions, and updates to your manuscripts. |
+| **librarian** | Finds books. Lists your library, browses the marketplace, subscribes to relevant listings, pulls tables of contents, and returns a short reading list of book ids + page ranges. Never reads pages. If nothing relevant exists, it reports the gap and can suggest a book worth adding. For books you wrote, it shows what readers are asking for. |
+| **item-reader** | Reads the pages on that reading list, opens and closes the access session, and returns findings with citations to specific pages. If a book it read in full does not cover the sub-topic you needed, it tells the book's author as an abstracted topic, never your question. |
+| **book-writer** | Creates and edits markdown books in your library — new knowledge docs, new chapters, single-page revisions, and updates to your manuscripts. It also undoes edits from version history, deletes books (after you confirm), and manages your shelves and manuscripts. |
 | **book-enricher** | Cleans up thin metadata in the background: a book that came in as `scan_001.pdf` with no author and no table of contents gets a real title, author and TOC. |
 
 A typical research turn: the skill orients itself with a library summary → spawns the **librarian** → hands its reading list verbatim to the **item-reader** → folds the findings into an answer with a citation block. Broad questions get split across several readers running in parallel.
@@ -91,9 +91,9 @@ The book-writer creates the markdown item in your library, then edits it in plac
 When you authorize during install, the connector requests:
 
 - **`library:read`** — list, search and read your items and their tables of contents.
-- **`library:write`** — create new markdown items, edit existing ones, and enrich metadata.
+- **`library:write`** — create new markdown items, edit existing ones, restore earlier versions, delete books you own (only after you confirm), manage shelves and manuscripts, and enrich metadata.
 - **`marketplace:read`** — browse community-published listings.
-- **`marketplace:write`** — subscribe to listings (a subscription counts against your plan's item limit).
+- **`marketplace:write`** — subscribe to listings (a subscription counts against your plan's item limit) and remove them again.
 
 Revoke at any time from <https://heytrove.ai/settings>. Revoking immediately invalidates the current access and refresh tokens.
 
@@ -173,7 +173,7 @@ Intentional, and driven by the runtime:
 | Auth | Browser flow minting a long-lived `trove_…` API key | OAuth 2.1 + PKCE via the bundled connector; tokens rotate |
 | Install | `trove setup` from a terminal | One click in Customize → Plugins |
 | Reading | `trove items read` in the shell | `read_items` MCP tool returning structured JSON |
-| Editing | Downloads markdown to `/tmp`, edits, re-uploads | `get_item_content` → edit in chat → `put_item_content` |
+| Editing | Downloads markdown to `/tmp`, edits, re-uploads | `append_item_pages` to add, `put_item_page` for one page, `put_item_content` to restructure |
 | Suggestion dedup | Local `~/.trove/suggested-books.txt` | Server-side, deduped per user across all clients |
 | Repo-stack hints | Reads `package.json` / `Cargo.toml` | Not available — Cowork has no project context |
 | Session context | SessionStart hook announces the library | `library_summary` tool call at the start of a task |

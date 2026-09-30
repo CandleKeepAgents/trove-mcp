@@ -39,12 +39,16 @@ The tools, and who calls them (add a row here when the server gains a tool):
 |---|---|
 | `library_summary` | you (once, at the start) |
 | `whoami` | setup skill |
-| `list_items`, `search_items`, `get_table_of_contents`, `browse_marketplace`, `subscribe_marketplace`, `report_gap`, `suggest_book` | librarian |
-| `start_access_session`, `read_items`, `complete_access_session`, `flag_item`, `reprocess_item` | item-reader (`reprocess_item` only after the user agrees) |
-| `create_markdown_item`, `get_item_content`, `put_item_content` | book-writer |
-| `enrich_item` | book-enricher |
+| `list_items`, `search_items`, `get_table_of_contents`, `browse_marketplace`, `subscribe_marketplace` | librarian (discovery) |
+| `report_gap`, `suggest_book`, `list_book_gaps`, `resolve_book_gap`, `restore_book_gap` | librarian (library misses, and reader requests on the user's own books) |
+| `start_access_session`, `read_items`, `get_item_content`, `get_table_of_contents`, `complete_access_session`, `flag_item`, `reprocess_item`, `report_gap` with `aboutItemId` | item-reader — passes the `sessionId` from `start_access_session` on every read; `reprocess_item` only after the user agrees; records an in-book gap when a fully read book lacks the sub-topic |
+| `create_markdown_item`, `get_item_content`, `append_item_pages`, `put_item_page`, `put_item_content` | book-writer (writing) |
+| `list_item_versions`, `restore_item_version`, `delete_items`, `unsubscribe_marketplace` | book-writer (undo and removal — confirms with the user first) |
+| `list_shelves`, `get_shelf`, `create_shelf`, `update_shelf`, `delete_shelf`, `add_to_shelf`, `remove_from_shelf` | book-writer (shelves) |
+| `list_manuscripts`, `create_manuscript`, `update_manuscript`, `archive_manuscript` | book-writer (manuscripts) |
+| `enrich_item` (plus its own `start_access_session` / `read_items` / `complete_access_session`) | book-enricher |
 
-**Do not call the discovery or reading tools yourself.** `search_items`, `browse_marketplace`, `subscribe_marketplace`, `get_table_of_contents`, `read_items`, `start_access_session`, `complete_access_session`, `report_gap`, and `suggest_book` belong to the sub-agents. The only tool you call directly is `library_summary`, once, for orientation and manuscript context.
+**Do not call the other tools yourself.** Every tool in the table except `library_summary` and `whoami` belongs to a sub-agent. The only tool you call directly is `library_summary`, once, for orientation and manuscript context.
 
 ---
 
@@ -185,7 +189,19 @@ prompt: "Help the user with their writing task: [full task description]
 book and confirm the match with the user before editing.]"
 ```
 
-The book-writer owns the whole create / get / edit / put cycle. Do not call `create_markdown_item`, `get_item_content`, or `put_item_content` yourself — routing through the agent is what keeps version snapshots and full-body writes correct. Relay the writer's one-line confirmation to the user.
+The book-writer owns the whole create / get / edit / write cycle, and picks the smallest write (`append_item_pages` to add, `put_item_page` for one page, `put_item_content` to restructure). Do not call any write tool yourself — routing through the agent is what keeps version checks and writes correct. Relay the writer's one-line confirmation to the user.
+
+## Library management path
+
+Route these to an agent too, with the user's request verbatim:
+
+| The user asks to… | Agent |
+|---|---|
+| undo an edit, see or restore an earlier version | `book-writer` |
+| delete books, or remove a marketplace book | `book-writer` (it confirms the exact books before an irreversible delete) |
+| create, rename, reorder or delete shelves, or put books on a shelf | `book-writer` |
+| list, create, pause, resume or archive manuscripts | `book-writer` |
+| see what readers are asking for in books they wrote, or mark a request fulfilled or reopen it | `librarian` |
 
 ---
 
@@ -236,8 +252,8 @@ Insight to add: {the full insight from this session}
 
 FOLLOW the manuscript's instructions exactly (structure, Index/Changelog pages,
 interlinks, tone). If none were provided, append cleanly under the most relevant
-'#' page. Read the current body with get_item_content, merge, then write the FULL
-merged body back with put_item_content."
+'#' page. Read the current body with get_item_content. Add a new entry with
+append_item_pages; merge into an existing page with put_item_page and expectedVersion."
 ```
 
 After it returns, post exactly one line to the user — not a proposal box:
@@ -277,7 +293,7 @@ Content to add: {the full proposed text, expanded from the summary}
 Writing style: Match the existing book's tone and structure.
 
 Read the current body with get_item_content, insert under the target chapter, then
-write the FULL merged body back with put_item_content."
+write that page back with put_item_page and expectedVersion."
 ```
 
 After it returns, post exactly one line: `📝 Added to "{title}" (private unless you've shared it): {one-sentence summary of what was added}`

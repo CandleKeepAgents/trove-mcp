@@ -6,13 +6,13 @@
   },
   "metadata": {
     "description": "Trove gives your AI agents a library they can actually read. Install the Cowork plugin to research your own PDFs and markdown documents with page-level citations, browse and subscribe to marketplace books, and write knowledge documents back to your library — all over a hosted MCP server, with no local CLI to install.",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "trove-cowork",
       "source": "./plugins/trove-cowork",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "description": "AI agent access to your Trove document library in Claude Cowork. Bundles the trove skill, four specialist sub-agents (librarian, item-reader, book-writer, book-enricher) and the hosted Trove MCP connector, so research, marketplace subscriptions and document writing all work with no local CLI or filesystem."
     }
   ]
