@@ -15,14 +15,17 @@ This repository contains:
 
 One repository serves both stores. Anthropic reads a plugin from a folder in a GitHub repository, and a repository can hold more than one plugin folder. The Anthropic connector listing needs only the server URL. OpenAI takes a ZIP file that you upload, and it does not read a repository. The two stores use different manifest files, and each set is in its own folder, so they do not conflict.
 
-## Install in Claude (Cowork, Claude Desktop, claude.ai)
+## Install in Claude (claude.ai, Claude Desktop, Cowork)
 
-1. Open **Customize → Plugins → Add marketplace**.
-2. Enter `CandleKeepAgents/trove-mcp`.
-3. Find **Trove** in the plugin list and click **Install**.
-4. Sign in with your heytrove.ai account and click **Authorize**.
+Plugins need a paid Claude plan (Pro, Max, Team or Enterprise).
 
-To use only the connector, without the skill and the sub-agents, add a custom connector with this URL:
+1. Open **Customize → Plugins**. In Cowork, open the **Cowork** tab first.
+2. Click **Add → Add marketplace → Add from a repository**.
+3. Enter `CandleKeepAgents/trove-mcp`.
+4. Find **trove-cowork** in the plugin list and click **Install**.
+5. Sign in with your heytrove.ai account and click **Authorize**.
+
+On the Free plan, or to use only the connector without the skill and the sub-agents, open **Settings → Connectors → Add custom connector** and enter this URL. On a Team or Enterprise plan, an owner adds it first in **Admin settings → Connectors**.
 
 ```
 https://heytrove.ai/api/v1/mcp
@@ -30,9 +33,15 @@ https://heytrove.ai/api/v1/mcp
 
 ## Install in ChatGPT
 
-1. Open the ChatGPT app directory and find **Trove**.
-2. Click **Connect**.
-3. Sign in with your heytrove.ai account and click **Authorize**.
+Until Trove is in the ChatGPT app directory, connect it in developer mode. Developer mode needs a paid ChatGPT plan (Plus, Pro, Business, Enterprise or Edu) and works on the web. On a Business or Enterprise workspace, an admin turns it on first.
+
+1. Open **Settings → Security and login** and turn on **Developer mode**.
+2. Open **Plugins** and click **+**.
+3. Enter the name `Trove` and the server URL `https://heytrove.ai/api/v1/mcp`. Keep **OAuth** as the authentication.
+4. Sign in with your heytrove.ai account and click **Authorize**.
+5. In a new chat, type **@** and select **Trove**.
+
+After Trove is in the app directory, find **Trove** there and click **Connect**.
 
 ## Tools
 
