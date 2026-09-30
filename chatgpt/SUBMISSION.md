@@ -56,7 +56,7 @@ The OpenAI package format discovers skills in `skills/`. It has no sub-agents. T
 
 - [ ] **TODO:** Make sure that `https://heytrove.ai/support` opens without sign-in. Today the support page is in the signed-in dashboard. OpenAI requires that each URL is accessible and names the same publisher.
 - [ ] **TODO:** Make sure that the privacy policy states the categories of personal data, the purposes, the categories of recipients, and the retention periods. OpenAI requires all four.
-- [ ] Note: the guidelines tell you not to use a single dictionary word as the name. "Trove" is a dictionary word. If the review rejects it, use "Trove Library" in `displayName`.
+- [x] Name: `displayName` is "Trove". The Trove Brand Book (ch. 02) forbids descriptors in the name, so "knowledge library" goes in `shortDescription` instead. The guidelines discourage single dictionary words; if the review objects, ask the brand owner before changing the name.
 
 ## 4. Images
 

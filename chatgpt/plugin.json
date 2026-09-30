@@ -11,12 +11,19 @@
   "homepage": "https://heytrove.ai",
   "repository": "https://github.com/CandleKeepAgents/trove-mcp",
   "license": "MIT",
-  "keywords": ["knowledge-base", "documents", "pdf", "library", "research", "citations"],
+  "keywords": [
+    "knowledge-base",
+    "documents",
+    "pdf",
+    "library",
+    "research",
+    "citations"
+  ],
   "extensions": {
     "com.openai": {
       "interface": {
         "displayName": "Trove",
-        "shortDescription": "Read and cite your own books",
+        "shortDescription": "Your AI's knowledge library, cited to the page",
         "longDescription": "Trove turns the PDFs, ebooks and markdown documents in your Trove account into a source ChatGPT can search, read and cite. Ask a question and ChatGPT finds the relevant books, reads only the pages it needs, and answers with the book title and page for each claim. You can also add community books from the Trove marketplace to your library and create or edit markdown knowledge documents. Trove only accesses the library of the account you connect. CandleKeep is the former name of Trove.",
         "developerName": "Trove",
         "category": "Productivity",

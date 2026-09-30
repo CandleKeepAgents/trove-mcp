@@ -50,7 +50,7 @@ The CI workflow `.github/workflows/validate.yml` does the local checks. The port
 
 Raise `version` in `plugin.json` and `marketplace.json`, and add a CHANGELOG entry, for each release. The directory follows the tracked branch and scans each new commit.
 
-Name risk: the portal holds a name that is only generic words. "Trove" is a dictionary word, so a reviewer can hold the plugin. This is a hold, not a rejection.
+Name risk: the portal holds a name that is only generic words. "Trove" is a dictionary word, so a reviewer can hold the plugin. This is a hold, not a rejection. The name stays "Trove" (Brand Book ch. 02: no descriptors in the name); put "knowledge library" in the one-liner.
 
 ## 3. Connector checks
 
@@ -89,7 +89,7 @@ Connector listing (portal **Listing** step):
 | Field | Value |
 |---|---|
 | Server name (100 characters) | Trove |
-| One-liner (200 characters) | Search, read and cite the books in your Trove library, add marketplace books, and write knowledge documents. |
+| One-liner (200 characters) | Your AI's knowledge library: search, read and cite your books to the page, add marketplace books, and write knowledge documents. |
 | Description (2000 characters) | **TODO:** write it. Start from `plugins/trove-cowork/README.md`. Anthropic cannot edit it after you submit. |
 | Categories (1 to 5) | **TODO:** for example Knowledge, Productivity, Research |
 | Documentation URL | https://heytrove.ai/install?surface=cowork |
