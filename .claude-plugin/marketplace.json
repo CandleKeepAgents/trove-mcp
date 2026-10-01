@@ -1,8 +1,9 @@
 {
   "name": "trove",
   "owner": {
-    "name": "Trove",
-    "email": "support@heytrove.ai"
+    "name": "heytrove.ai",
+    "email": "support@heytrove.ai",
+    "url": "https://heytrove.ai"
   },
   "metadata": {
     "description": "Trove gives your AI agents a library they can actually read. Install the Cowork plugin to research your own PDFs and markdown documents with page-level citations, browse and subscribe to marketplace books, and write knowledge documents back to your library \u2014 all over a hosted MCP server, with no local CLI to install.",

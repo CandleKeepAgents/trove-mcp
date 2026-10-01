@@ -3,8 +3,9 @@
   "version": "1.1.1",
   "description": "AI agent access to your Trove document library inside Claude Cowork. Research questions using your uploaded PDFs and markdown files with citations, browse and subscribe to the marketplace, and create or edit knowledge documents \u2014 all backed by a public MCP server with OAuth.",
   "author": {
-    "name": "Trove",
-    "email": "support@heytrove.ai"
+    "name": "heytrove.ai",
+    "email": "support@heytrove.ai",
+    "url": "https://heytrove.ai"
   },
   "license": "MIT",
   "keywords": [
