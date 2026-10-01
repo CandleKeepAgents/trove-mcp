@@ -4,7 +4,7 @@
 
 - Set the directory display name to Trove and bundle the square listing icon inside the plugin.
 - Declare privacy, support, documentation and terms URLs explicitly for the directory preview.
-- Remove the outdated downloadable ZIP fallback and describe the current disconnect flow accurately.
+- Remove the outdated downloadable ZIP fallback and describe the current disconnect flow accurately, in the README and in the setup skill.
 
 ## 1.1.0 — Page-level writes, undo, delete, shelves, manuscripts
 
