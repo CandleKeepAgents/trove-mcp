@@ -21,8 +21,6 @@ That's it. Installing the plugin adds the skill, the four subagents, and the Tro
 
 > Once the plugin is listed in Anthropic's plugin directory, steps 1–2 collapse into **Browse plugins**; marketplaces you added by hand keep working either way.
 
-**Prefer a file?** Download <https://heytrove.ai/cowork-plugin.zip> and use the upload option on the **Plugins** page. It's the same package the marketplace serves, but an uploaded file doesn't auto-update. Note this is a *plugin package*, not a skill bundle — install it under **Plugins**, not under **Skills**; the Skills uploader expects a single skill at the top level and will reject it.
-
 Don't have a library yet? [Create a free Trove account](https://heytrove.ai) and upload a few PDFs first — the plugin reads whatever is in your account.
 
 Illustrated walkthrough: <https://heytrove.ai/install?surface=cowork>
@@ -95,7 +93,7 @@ When you authorize during install, the connector requests:
 - **`marketplace:read`** — browse community-published listings.
 - **`marketplace:write`** — subscribe to listings (a subscription counts against your plan's item limit) and remove them again.
 
-Revoke at any time from <https://heytrove.ai/settings>. Revoking immediately invalidates the current access and refresh tokens.
+Disconnect Trove in Claude’s connector settings. Access tokens expire within one hour. To request immediate revocation on Trove’s side, email support@heytrove.ai. Deleting your Trove account removes all connections.
 
 ---
 

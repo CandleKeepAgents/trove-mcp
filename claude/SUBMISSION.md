@@ -42,7 +42,7 @@ The CI workflow `.github/workflows/validate.yml` does the local checks. The port
 | `description`, `author`, `version` are set | Yes |
 | README of 40 words or more in the plugin folder | Yes: `plugins/trove-cowork/README.md` |
 | LICENSE in the plugin folder | Yes: MIT, holder Trove |
-| Consistent versions | Yes: `plugin.json`, `marketplace.json`, the CHANGELOG top entry and `chatgpt/plugin.json` are all the same version (now 1.1.0). CI fails if they differ. |
+| Consistent versions | Yes: `plugin.json`, `marketplace.json`, the CHANGELOG top entry and `chatgpt/plugin.json` are all the same version (now 1.1.1). CI fails if they differ. |
 | Remote MCP server has `type: http` and an `https://` URL | Yes |
 | No `.DS_Store` or other OS files | CI fails if one is present. |
 | No hooks, scripts, launchers or lockfiles | Yes. The plugin is only Markdown and JSON, so nothing is held for a reviewer for this reason. |

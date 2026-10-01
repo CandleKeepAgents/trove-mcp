@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1 — Directory listing metadata
+
+- Set the directory display name to Trove and bundle the square listing icon inside the plugin.
+- Declare privacy, support, documentation and terms URLs explicitly for the directory preview.
+- Remove the outdated downloadable ZIP fallback and describe the current disconnect flow accurately.
+
 ## 1.1.0 — Page-level writes, undo, delete, shelves, manuscripts
 
 - The connector now has 38 tools (20 new). The skill's tool table maps each one to the agent that calls it.
