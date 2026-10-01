@@ -70,7 +70,7 @@ The OpenAI package format discovers skills in `skills/`. It has no sub-agents. T
 Server URL: `https://heytrove.ai/api/v1/mcp` (streamable HTTP).
 
 - [ ] **TODO — domain verification.** OpenAI gives a challenge token. The webapp serves `https://heytrove.ai/.well-known/openai-apps-challenge` from the environment variable `OPENAI_APPS_CHALLENGE`. Set that variable on the heytrove.ai service to the token from the dashboard, then let OpenAI verify.
-- [x] **Tool annotations — done.** OpenAI requires three explicit boolean values on each tool: `readOnlyHint`, `destructiveHint`, `openWorldHint`. The server sends all four hints (with `idempotentHint`) on each of its 38 tools. Values as the server sends them ("new" marks the 20 tools added in 1.1.0). When the server gets a new tool, add a row here:
+- [x] **Tool annotations — done.** OpenAI requires three explicit boolean values on each tool: `readOnlyHint`, `destructiveHint`, `openWorldHint`. The server sends all four hints (with `idempotentHint`) on each of its 38 tools. Values as the server sends them ("new" marks the 20 tools added in 1.1.0). Every write tool sends `destructiveHint: true`, including tools that only add something, because Anthropic's connector review requires it for any tool that modifies data. When the server gets a new tool, add a row here:
 
 | Tool | readOnlyHint | idempotentHint | destructiveHint | openWorldHint | |
 |---|---|---|---|---|---|
@@ -87,21 +87,21 @@ Server URL: `https://heytrove.ai/api/v1/mcp` (streamable HTTP).
 | `list_manuscripts` | true | true | false | false | new |
 | `list_book_gaps` | true | true | false | false | new |
 | `browse_marketplace` | true | true | false | true |  |
-| `create_markdown_item` | false | false | false | false |  |
-| `append_item_pages` | false | false | false | false | new |
-| `create_shelf` | false | false | false | false | new |
-| `create_manuscript` | false | false | false | false | new |
-| `start_access_session` | false | false | false | false |  |
-| `report_gap` | false | false | false | false |  |
-| `flag_item` | false | true | false | false |  |
-| `update_shelf` | false | true | false | false | new |
-| `add_to_shelf` | false | true | false | false | new |
-| `update_manuscript` | false | true | false | false | new |
-| `resolve_book_gap` | false | true | false | false | new |
-| `restore_book_gap` | false | true | false | false | new |
-| `complete_access_session` | false | true | false | false |  |
-| `subscribe_marketplace` | false | true | false | false |  |
-| `suggest_book` | false | true | false | false |  |
+| `create_markdown_item` | false | false | true | false |  |
+| `append_item_pages` | false | false | true | false | new |
+| `create_shelf` | false | false | true | false | new |
+| `create_manuscript` | false | false | true | false | new |
+| `start_access_session` | false | false | true | false |  |
+| `report_gap` | false | false | true | false |  |
+| `flag_item` | false | true | true | false |  |
+| `update_shelf` | false | true | true | false | new |
+| `add_to_shelf` | false | true | true | false | new |
+| `update_manuscript` | false | true | true | false | new |
+| `resolve_book_gap` | false | true | true | false | new |
+| `restore_book_gap` | false | true | true | false | new |
+| `complete_access_session` | false | true | true | false |  |
+| `subscribe_marketplace` | false | true | true | false |  |
+| `suggest_book` | false | true | true | false |  |
 | `put_item_content` | false | false | true | false |  |
 | `reprocess_item` | false | false | true | false |  |
 | `unsubscribe_marketplace` | false | false | true | false | new |
