@@ -39,6 +39,6 @@ If reconnecting doesn't fix it:
 
 - Support: https://heytrove.ai/support
 - Email: support@heytrove.ai
-- Revoke or inspect the authorization at https://heytrove.ai/settings
+- To disconnect Trove, remove it in **Customize → Connectors**. To ask Trove to revoke access immediately, email support@heytrove.ai
 
 Setup is a one-time thing. Once `whoami` succeeds, don't run this check again unless a Trove tool comes back `401`.
