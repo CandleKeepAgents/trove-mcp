@@ -20,7 +20,7 @@ OpenAI accepts a ZIP file of an "Agent Plugins" package. You upload it at <https
 | `mcp.json` | The one MCP server: `trove` at `https://heytrove.ai/api/v1/mcp` |
 | `skills/get-started/SKILL.md` | Onboarding skill (`onboardingSkill`). It calls `whoami`. |
 | `skills/trove/SKILL.md` | The research and writing workflow |
-| `assets/` | Icons and logos. **TODO:** add them (see step 4). |
+| `assets/` | Icons and logos: `icon.png`, `logo.png` (light), `icon-dark.png`, `logo-dark.png` (dark). See step 4. |
 
 Make the ZIP from inside this folder, so that `plugin.json` is at the root of the ZIP:
 
@@ -44,7 +44,7 @@ The OpenAI package format discovers skills in `skills/`. It has no sub-agents. T
 | Field | Value | Limit |
 |---|---|---|
 | `displayName` | Trove | 30 characters |
-| `shortDescription` | Read and cite your own books | 30 characters |
+| `shortDescription` | Knowledge for agents | 30 characters |
 | `longDescription` | In `plugin.json` | 4000 characters |
 | `developerName` | Trove | 80 characters |
 | `category` | Productivity. **TODO:** confirm in the dashboard list. | Dashboard list |
@@ -54,13 +54,14 @@ The OpenAI package format discovers skills in `skills/`. It has no sub-agents. T
 | `termsOfServiceURL` | https://heytrove.ai/terms | HTTPS |
 | `defaultPrompt` | 3 prompts in `plugin.json` | 3 prompts, 128 characters each |
 
-- [ ] **TODO:** Make sure that `https://heytrove.ai/support` opens without sign-in. Today the support page is in the signed-in dashboard. OpenAI requires that each URL is accessible and names the same publisher.
-- [ ] **TODO:** Make sure that the privacy policy states the categories of personal data, the purposes, the categories of recipients, and the retention periods. OpenAI requires all four.
+- [x] **Support page — done.** `https://heytrove.ai/support` is a public page that opens without sign-in (monorepo PR 510).
+- [x] **Privacy policy — done.** The policy states the categories of personal data, the purposes, the categories of recipients, and the retention periods (section "Data Retention", monorepo PR 510). OpenAI requires all four.
+- [x] **Support email — done.** `support@heytrove.ai` receives mail.
 - [x] Name: `displayName` is "Trove". The Trove Brand Book (ch. 02) forbids descriptors in the name, so "knowledge library" goes in `shortDescription` instead. The guidelines discourage single dictionary words; if the review objects, ask the brand owner before changing the name.
 
 ## 4. Images
 
-- [ ] **TODO:** Add these files to `assets/`: `icon.png`, `icon-dark.png`, `logo.png`, `logo-dark.png`. Use PNG, JPEG, WebP or SVG. Each image must be square, 48 px to 4096 px, and 5 MiB or less. `composerIcon` and `logo` are necessary. The dark versions are optional.
+- [x] **Icons — done.** `assets/` has `icon.png`, `icon-dark.png`, `logo.png`, `logo-dark.png`. Each is a square PNG of 1024 x 1024 px and less than 50 KB (the limits are square, 48 px to 4096 px, 5 MiB or less). The light versions show the Trove mark in ink (`#0e2321`) on paper (`#fbf7ee`). The dark versions show the mark in paper on dark green (`#18302b`). `composerIcon` and `logo` are necessary. The dark versions are optional.
 - [ ] Optional: add `brandColor` and `brandColorDark` to `interface`.
 - OpenAI does not show screenshots in the directory now. Do not make them.
 
@@ -68,7 +69,7 @@ The OpenAI package format discovers skills in `skills/`. It has no sub-agents. T
 
 Server URL: `https://heytrove.ai/api/v1/mcp` (streamable HTTP).
 
-- [ ] **TODO — domain verification.** OpenAI gives a challenge token. Serve it at `https://heytrove.ai/.well-known/openai-apps-challenge`. The webapp has no route for this path now. Add one that returns the token from an environment variable.
+- [ ] **TODO — domain verification.** OpenAI gives a challenge token. The webapp serves `https://heytrove.ai/.well-known/openai-apps-challenge` from the environment variable `OPENAI_APPS_CHALLENGE`. Set that variable on the heytrove.ai service to the token from the dashboard, then let OpenAI verify.
 - [x] **Tool annotations — done.** OpenAI requires three explicit boolean values on each tool: `readOnlyHint`, `destructiveHint`, `openWorldHint`. The server sends all four hints (with `idempotentHint`) on each of its 38 tools. Values as the server sends them ("new" marks the 20 tools added in 1.1.0). When the server gets a new tool, add a row here:
 
 | Tool | readOnlyHint | idempotentHint | destructiveHint | openWorldHint | |
@@ -115,7 +116,7 @@ Server URL: `https://heytrove.ai/api/v1/mcp` (streamable HTTP).
 - [ ] **Result shape.** Each tool must return `structuredContent` (concise data for the model) and `content`. Data that only the client uses goes in `_meta`. The server sends `structuredContent` and `content` now. OpenAI also lists an output schema for each tool that returns structured data; the server declares none. **TODO:** add `outputSchema` to each tool, and make sure that each result agrees with it. Source: <https://developers.openai.com/apps-sdk/build/mcp-server>.
 - [ ] UI widgets are optional. Trove submits as a data-only app, so it needs no `_meta.ui.resourceUri`, no HTML resource and no CSP.
 - [x] **Server instructions — done.** The server sends an `instructions` string (approximately 1,600 characters). OpenAI recommends 512 characters or fewer; this is a recommendation, not a check. Keep the main workflow in the first 500 characters, because a client can shorten the text. Tool descriptions must describe what the tool does. They must not tell the model to call other tools or to promote a product.
-- [ ] **TODO — upgrade text in tool results.** The guidelines prohibit plan offers, upgrade prompts, and links to checkout pages in the app. Tool results now contain `upgradeUrl` (`/billing`) and "Upgrade to Professional" text. Remove these when the client is ChatGPT. You can identify the client from the OAuth client that ChatGPT registers, or from `clientInfo.name` in `initialize`. A link to an informational plans page is permitted.
+- [x] **Upgrade text in tool results — done (server side).** The guidelines prohibit plan offers, upgrade prompts, and links to checkout pages in the app. When the client is ChatGPT (identified by the OAuth redirect host), limit messages use neutral wording, and results contain no `upgradeUrl` and no billing link.
 - [ ] Check that no tool result contains session IDs, trace IDs or diagnostic metadata that the user did not ask for. `start_access_session` must return its `sessionId`, because `complete_access_session` needs it.
 
 ## 6. Authentication (OAuth 2.1)
@@ -143,7 +144,7 @@ ChatGPT redirect URIs:
 
 DCR accepts both, so no allowlist change is necessary.
 
-- [ ] **TODO — issuer.** Set `OAUTH_ISSUER_URL=https://heytrove.ai` in production. If it is not set, the code uses the old domain of the product. Then the `resource` in the metadata does not agree with the MCP URL, and the connection fails.
+- [x] **Issuer — done.** `OAUTH_ISSUER_URL=https://heytrove.ai` is set in production, so the `resource` in the metadata agrees with the MCP URL.
 - [ ] **TODO — no redirect on the MCP URL.** Make sure that `https://heytrove.ai/api/v1/mcp` answers directly. A redirect from the apex domain to `www` breaks MCP clients.
 - [ ] Check with `curl -i https://heytrove.ai/api/v1/mcp`: the answer must be `401` with a `WWW-Authenticate` header that points to the protected resource metadata.
 
@@ -152,13 +153,30 @@ DCR accepts both, so no allowlist change is necessary.
 - [ ] **TODO:** Make a dedicated review account on heytrove.ai with sample data only. Do not use a real user's account.
 - [ ] The account must sign in with an email and a password. OpenAI does not accept MFA, email or SMS codes, magic links, or a private network. Make sure that the Clerk sign-in for this account does not ask for an email code.
 - [ ] Give the account a Pro plan, so that no test case stops at a limit.
-- [ ] Put these books in the account, because the test cases use them: one book about incident response with severity levels, and at least one Rust async book on the marketplace. The account must not contain a document called "On-Call Escalation Policy", because a test case creates it.
+- [ ] Put this data in the account, because the test cases use it:
+  - The **OWASP Web Security Testing Guide v4.2**, added from the Trove marketplace (test case 1).
+  - A PDF renamed `scan_001.pdf`, with no title and no author.
+  - No document called "On-Call Escalation Policy", because test case 3 creates it.
+  - Do not add **Kubernetes: Official Documentation** before the review, because test case 2 adds it. Do not add **Prisma ORM 7 Complete Reference** either (the Claude example uses it).
 - [ ] Keep the account and its data for later reviews.
 - [ ] Enter the login URL, the email, the password and the sign-in steps in the dashboard **Review details** form.
+- [ ] Note for the sign-in steps: until the rebrand flip, sign-in on heytrove.ai goes through getcandlekeep.com, the domain of CandleKeep, the former name of Trove (heytrove.ai is a Clerk satellite of it). The reviewer sees a getcandlekeep.com sign-in page and then returns to heytrove.ai. Say this in the sign-in steps, so that the reviewer does not think that the redirect is an error.
 
 ## 8. Test cases and demo recording
 
 `plugin.json` contains 5 positive test cases and 3 negative test cases. OpenAI requires at least these numbers.
+
+Positive:
+
+1. "What does my library say about testing for SQL injection? Cite the pages." Expected: picks the OWASP Web Security Testing Guide v4.2, reads a narrow page range, and answers with the title and page numbers.
+2. "Is there a book on Kubernetes in the Trove marketplace? Add the best one to my library." Expected: adds "Kubernetes: Official Documentation" and names it.
+3. "Create a doc in my library called "On-Call Escalation Policy" covering rotation and severity levels."
+4. "Add a section on paging escalation to my "On-Call Escalation Policy" doc."
+5. "What does my library say about 18th-century Estonian folk dance?" Expected: records the gap and invents no citations.
+
+Negative: "Email this summary to my team.", "Buy the Professional plan for me.", "Show me the books in another user's Trove library."
+
+The three `defaultPrompt` values are test cases 1, 2 and 3.
 
 - [ ] Run all 8 cases with the review account in ChatGPT developer mode before you submit. Correct `tools_triggered` if the real calls are different.
 - [ ] **TODO:** Record a video that shows the test cases. Put its URL in `review.demo_recording_url` (now a placeholder).

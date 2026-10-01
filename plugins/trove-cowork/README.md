@@ -60,29 +60,29 @@ The skill activates from plain language — no slash command needed. Concrete pr
 
 **1. Research a question against your own library**
 
-> What does my library say about backpressure in async Rust? Cite the pages.
+> What does my library say about testing for SQL injection? Cite the pages.
 
 The librarian picks the two or three books that actually cover it, the reader pulls the relevant pages, and you get an answer with a citation block listing each book and page range consulted — so you can verify every claim.
 
 **2. Find and add a book from the marketplace**
 
-> I need to get up to speed on Verilog. Check the Trove marketplace, add the best book, and summarise its approach to testbenches.
+> I need to get up to speed on Prisma. Check the Trove marketplace, add the best book, and summarise how it handles migrations.
 
 The librarian browses community-published listings, subscribes to the best match, then reads it in the same turn. If nothing on the marketplace fits either, it records the gap so we know what to publish next.
 
 **3. Write or update a knowledge document**
 
-> Draft a knowledge doc called "On-Call Escalation Policy" covering our rotation, severity levels, and the postmortem template. Then add a section on paging escalation.
+> Draft a knowledge doc called "On-Call Escalation Policy" covering our rotation and severity levels. Then add a section on paging escalation.
 
 The book-writer creates the markdown item in your library, then edits it in place on the follow-up. Every save is versioned, so nothing is overwritten irrecoverably.
 
 **More things that work**
 
-> Summarise chapter 4 of *Refactoring UI* and quote the part about spacing scales.
+> Is there a book on Kubernetes in the Trove marketplace? Add the best one to my library.
 
 > Add what we just figured out to my "Building for Agents" manuscript.
 
-> My library has a book called `document.pdf` with no author — clean up its metadata.
+> My library has a book called scan_001.pdf with no author. Clean up its metadata.
 
 ---
 
@@ -116,6 +116,18 @@ If you hit a limit, the plugin says so in one line and links to `/billing`. It n
 
 **Full privacy policy: <https://heytrove.ai/privacy>** · [Terms](https://heytrove.ai/terms) · [Security](https://heytrove.ai/security) · [Subprocessors](https://heytrove.ai/subprocessors)
 
+### Where your data goes
+
+This plugin sends data to **one destination only: `https://heytrove.ai/api/v1/mcp`**, the Trove MCP server, which Trove operates. It has no other network destination: no analytics, no telemetry, no third-party API. The skill and the four subagents are Markdown instructions; every action they take is a tool call to that one server.
+
+What the plugin sends to it:
+
+- **Library requests**: the tool calls that list, search, read, create, edit, enrich or delete items in your Trove library, add or remove marketplace books, and manage shelves and manuscripts, with the item ids, page ranges and document text those calls need.
+- **Research topics**: a one-line topic for each reading session, a topic your library does not cover, and the reason for a book suggestion (details in the table below).
+- **OAuth tokens** that prove which Trove account you connected.
+
+How Trove stores and uses this data, and for how long, is in the privacy policy: <https://heytrove.ai/privacy>.
+
 All traffic goes to `https://heytrove.ai/api/v1/mcp` over TLS. Tokens are stored hashed at rest and bound to this specific resource (RFC 8707), so a stolen token can't be replayed against another MCP server.
 
 **We store no transcript of your Cowork conversation** — no prompt stream, no turns, no message history. What we do keep is the tool calls themselves plus three short pieces of free text the agent supplies, all of which you can see it write:
@@ -126,9 +138,9 @@ All traffic goes to `https://heytrove.ai/api/v1/mcp` over TLS. Tokens are stored
 | An unanswered-question topic | `report_gap` | So we know which book to publish next, and can tell you when it exists | 1000 chars |
 | A book-suggestion rationale | `suggest_book` | De-duplicates suggestions | 1000 chars |
 
-The agents are instructed to write subject matter only ("backpressure in async Rust"), never your verbatim question. Independently of that, the server redacts recognisable emails, API keys, access tokens and phone numbers from **all three** of the above before storing them — the same redaction pass runs on every writer, so the guarantee does not depend on the agent behaving.
+The agents are instructed to write subject matter only ("SQL injection testing"), never your verbatim question. Independently of that, the server redacts recognisable emails, API keys, access tokens and phone numbers from **all three** of the above before storing them — the same redaction pass runs on every writer, so the guarantee does not depend on the agent behaving.
 
-Reader-gap signals shown to a book's author are abstracted topics only ("missing: testbench randomisation"), never your question text and never anything identifying you.
+Reader-gap signals shown to a book's author are abstracted topics only ("missing: rollback of failed migrations"), never your question text and never anything identifying you.
 
 ---
 

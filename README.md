@@ -93,10 +93,11 @@ Each tool tells the assistant if it only reads, if it can remove or overwrite da
 
 ## Example prompts
 
-- "What does my library say about backpressure in async Rust? Cite the pages."
-- "Find a marketplace book on Verilog, add it to my library, and summarize its approach to testbenches."
-- "Create a doc in my library called "On-Call Escalation Policy" covering rotation and severity levels."
-- "My library has a book called `document.pdf` with no author. Clean up its metadata."
+- "What does my library say about testing for SQL injection? Cite the pages."
+- "Is there a book on Kubernetes in the Trove marketplace? Add the best one to my library."
+- "I need to get up to speed on Prisma. Check the Trove marketplace, add the best book, and summarise how it handles migrations."
+- "Draft a knowledge doc called "On-Call Escalation Policy" covering our rotation and severity levels. Then add a section on paging escalation."
+- "My library has a book called scan_001.pdf with no author. Clean up its metadata."
 
 ## Privacy, terms and support
 
