@@ -23,7 +23,7 @@
     "com.openai": {
       "interface": {
         "displayName": "Trove",
-        "shortDescription": "Your AI's knowledge library, cited to the page",
+        "shortDescription": "Knowledge for agents",
         "longDescription": "Trove turns the PDFs, ebooks and markdown documents in your Trove account into a source ChatGPT can search, read and cite. Ask a question and ChatGPT finds the relevant books, reads only the pages it needs, and answers with the book title and page for each claim. You can also add community books from the Trove marketplace to your library and create or edit markdown knowledge documents. Trove only accesses the library of the account you connect. CandleKeep is the former name of Trove.",
         "developerName": "Trove",
         "category": "Productivity",
@@ -38,8 +38,8 @@
         "privacyPolicyURL": "https://heytrove.ai/privacy",
         "termsOfServiceURL": "https://heytrove.ai/terms",
         "defaultPrompt": [
-          "What does my library say about backpressure in async Rust? Cite the pages.",
-          "Find a marketplace book on Verilog, add it to my library, and summarize its approach to testbenches.",
+          "What does my library say about testing for SQL injection? Cite the pages.",
+          "Is there a book on Kubernetes in the Trove marketplace? Add the best one to my library.",
           "Create a doc in my library called \"On-Call Escalation Policy\" covering rotation and severity levels."
         ],
         "composerIcon": "./assets/icon.png",
@@ -53,15 +53,15 @@
           "positive": [
             {
               "description": "Answer a question from the user's own library with page citations",
-              "prompt": "What does my library say about incident severity levels? Cite the pages.",
+              "prompt": "What does my library say about testing for SQL injection? Cite the pages.",
               "tools_triggered": "library_summary, list_items, get_table_of_contents, start_access_session, read_items, complete_access_session",
-              "expected_behavior": "Picks the relevant seeded book, reads a narrow page range, and answers with the book title and page number for each claim."
+              "expected_behavior": "Picks the OWASP Web Security Testing Guide v4.2, reads a narrow page range, and answers with the book title and page number for each claim."
             },
             {
               "description": "Find and add a marketplace book",
-              "prompt": "Is there a book on Rust async programming in the Trove marketplace? Add the best one to my library.",
+              "prompt": "Is there a book on Kubernetes in the Trove marketplace? Add the best one to my library.",
               "tools_triggered": "browse_marketplace, subscribe_marketplace, list_items",
-              "expected_behavior": "Lists matching marketplace books, adds the best match to the library, and names the book it added."
+              "expected_behavior": "Lists matching marketplace books, adds \"Kubernetes: Official Documentation\" to the library, and names the book it added."
             },
             {
               "description": "Create a new markdown document",
