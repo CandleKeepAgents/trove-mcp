@@ -60,6 +60,17 @@ jobs:
           fi
           echo "Nested layout verified"
 
+      - name: Check OpenAI specialist skills
+        run: |
+          set -euo pipefail
+          for ROLE in trove-librarian trove-item-reader trove-book-writer trove-book-enricher; do
+            SKILL="chatgpt/skills/$ROLE/SKILL.md"
+            [ -f "$SKILL" ] || { echo "::error::missing OpenAI specialist workflow: $SKILL"; exit 1; }
+          done
+          for DIR in chatgpt/skills/*/; do
+            [ -f "${DIR}SKILL.md" ] || { echo "::error::${DIR} has no SKILL.md"; exit 1; }
+          done
+
       - name: Check manifest values
         run: |
           set -euo pipefail

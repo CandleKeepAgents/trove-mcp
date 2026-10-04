@@ -19,7 +19,8 @@ OpenAI accepts a ZIP file of an "Agent Plugins" package. You upload it at <https
 | `plugin.json` | Package identity, the listing (`extensions.com.openai.interface`), the review test cases, and the release notes |
 | `mcp.json` | The one MCP server: `trove` at `https://heytrove.ai/api/v1/mcp` |
 | `skills/get-started/SKILL.md` | Onboarding skill (`onboardingSkill`). It calls `whoami`. |
-| `skills/trove/SKILL.md` | The research and writing workflow |
+| `skills/trove/SKILL.md` | Routes research, writing and metadata work; delegates when supported |
+| `skills/trove-{librarian,item-reader,book-writer,book-enricher}/SKILL.md` | The four specialist role workflows, converted from Claude agents |
 | `assets/` | Icons and logos: `icon.png`, `logo.png` (light), `icon-dark.png`, `logo-dark.png` (dark). See step 4. |
 
 Make the ZIP from inside this folder, so that `plugin.json` is at the root of the ZIP:
@@ -30,9 +31,15 @@ cd chatgpt && zip -r ../trove-chatgpt.zip plugin.json mcp.json skills assets -x 
 
 Do not put credentials in the ZIP. You enter the test account in the dashboard.
 
-### Skills, but no sub-agents
+### Four specialist workflows and host-aware delegation
 
-The OpenAI package format discovers skills in `skills/`. It has no sub-agents. Thus the Claude workflow (librarian, item-reader, book-writer, book-enricher) is one skill here, and ChatGPT does all steps in one conversation. The MCP server tool descriptions must also carry the important rules (narrow page ranges, `pages` is a string, `expectedVersion` on writes), because a client can ignore a skill.
+The package contains `skills/trove-librarian/`, `skills/trove-item-reader/`, `skills/trove-book-writer/`, and `skills/trove-book-enricher/`, each with a `SKILL.md`. The main `trove` skill routes tasks to them. These are portable skills, not registered OpenAI custom agent types. OpenAI's [Claude-plugin conversion guidance](https://developers.openai.com/plugins/guides/submit-claude-plugin) requires reusable `agents/` behavior to be converted to skills.
+
+ChatGPT Work and Codex [support subagent workflows](https://learn.chatgpt.com/docs/agent-configuration/subagents). In a host that exposes delegation, the parent can give a general child the role's instructions and scoped task; otherwise it executes the same steps directly. The package does not install custom TOML profiles into `~/.codex/agents/`, nor does it promise subagents in ordinary ChatGPT chat. MCP connection/tool availability must be checked in the child; parent execution is the fallback.
+
+Version 1.1.4 includes these workflows. The existing reviewed upload was 1.1.3 and contains only `trove` and `get-started`; preparing this source does not update that portal submission. Preserve its current review until the portal offers a supported update path. Do not withdraw or create a duplicate to replace skills without the owner's decision.
+
+Before uploading 1.1.4, test: ordinary chat runs discovery and cited reads directly; a supported Work/Codex session delegates discovery and reading with scoped handoffs; edits preserve unrelated content with `expectedVersion`; a metadata request verifies the PDF TOC offset before writing; missing child tools fall back to the connected parent. Do not claim these runtime checks passed based on ZIP validation alone.
 
 ## 2. Organization and identity
 

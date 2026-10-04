@@ -10,8 +10,10 @@ This repository contains:
 |---|---|
 | `plugins/trove-cowork/` | The Claude plugin: the `trove` skill, four sub-agents, and the Trove connector |
 | `.claude-plugin/marketplace.json` | The Claude plugin marketplace with the name `trove` |
-| `chatgpt/` | The ChatGPT app package and its submission checklist |
+| `chatgpt/` | The OpenAI package: main workflow, onboarding, four specialist skills, MCP configuration and submission checklist |
 | `claude/` | The submission checklist for Anthropic's directory |
+
+Claude agents run in Cowork and Claude Code; ordinary Claude chat follows the same instructions directly. OpenAI packages the four roles as skills, with delegation in supported Work/Codex environments and direct execution otherwise. An MCP connector alone does not install these workflows.
 
 One repository serves both stores. Anthropic reads a plugin from a folder in a GitHub repository, and a repository can hold more than one plugin folder. The Anthropic connector listing needs only the server URL. OpenAI takes a ZIP file that you upload, and it does not read a repository. The two stores use different manifest files, and each set is in its own folder, so they do not conflict.
 

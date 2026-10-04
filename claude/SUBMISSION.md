@@ -29,6 +29,12 @@ Anthropic tells you to submit the server as a connector also, when your plugin u
 - [ ] **TODO:** Connect the GitHub account of the submitter on claude.ai, in the same Claude organization. That account must have push access to `CandleKeepAgents/trove-mcp`.
 - [ ] **TODO:** If the old plugin (formerly called CandleKeep) has a live listing, decide if you delist it after the Trove listing is live.
 
+### Verified submission checkpoint — 2026-10-04
+
+The portal currently has the `heytrove` **MCP server** listing in review. That connector submission does not install this repository's agent definitions. The plugin bundle must be submitted separately from `plugins/trove-cowork` on `main`; check the portal for an existing bundle draft before creating one. The four native agent files are already in `agents/` and are discovered by the Claude plugin loader.
+
+Bundled agents run in Cowork and Claude Code; ordinary Claude chat uses the direct workflow fallback in the `trove` skill. See [Anthropic's host support guidance](https://support.claude.com/en/articles/13837440-use-plugins-in-claude). A local validator passing is not proof of OAuth, agent execution or successful marketplace submission. Validate the exact merged commit in the portal and complete its owner acknowledgements before submitting.
+
 ## 2. Plugin bundle checks
 
 The CI workflow `.github/workflows/validate.yml` does the local checks. The portal **Validate** button does more checks.
@@ -42,7 +48,7 @@ The CI workflow `.github/workflows/validate.yml` does the local checks. The port
 | `description`, `author`, `version` are set | Yes |
 | README of 40 words or more in the plugin folder | Yes: `plugins/trove-cowork/README.md` |
 | LICENSE in the plugin folder | Yes: MIT, holder Trove |
-| Consistent versions | Yes: `plugin.json`, `marketplace.json`, the CHANGELOG top entry and `chatgpt/plugin.json` are all the same version (now 1.1.1). CI fails if they differ. |
+| Consistent versions | Yes: `plugin.json`, `marketplace.json`, the CHANGELOG top entry and `chatgpt/plugin.json` are all the same version (now 1.1.4). CI fails if they differ. |
 | Remote MCP server has `type: http` and an `https://` URL | Yes |
 | No `.DS_Store` or other OS files | CI fails if one is present. |
 | No hooks, scripts, launchers or lockfiles | Yes. The plugin is only Markdown and JSON, so nothing is held for a reviewer for this reason. |
