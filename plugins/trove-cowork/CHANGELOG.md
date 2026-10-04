@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.4 — Specialist workflows across plugin hosts
+
+- Keep the four native Claude agents in the plugin bundle and add direct execution when ordinary Claude chat has no Agent tool.
+- Add four equivalent OpenAI skills with role instructions and capability-aware delegation for Work/Codex, plus direct execution when delegation is unavailable.
+- Preserve the submitted OpenAI 1.1.3 demo URL and email-notification caveat; do not regress to the older source manifest.
+- Keep version checks, page citations and host confirmations in every workflow.
+
 ## 1.1.1 — Directory listing metadata
 
 - Set the directory display name to Trove and bundle the square listing icon inside the plugin.

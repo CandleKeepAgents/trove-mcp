@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "trove",
-  "version": "1.1.1",
+  "version": "1.1.4",
   "description": "Trove gives ChatGPT a library it can read. Search and read the PDFs, ebooks and markdown documents in your Trove account, answer with page-level citations, add books from the Trove marketplace, and write knowledge documents back to your library.",
   "author": {
     "name": "Trove",
@@ -84,7 +84,7 @@
           ],
           "negative": [
             {
-              "description": "Out of scope: Trove does not send email or messages",
+              "description": "Out of scope: Trove cannot compose or send arbitrary email. Its team-sharing and reader-request tools may send product notifications; do not use those as an email substitute.",
               "prompt": "Email this summary to my team."
             },
             {
@@ -97,12 +97,12 @@
             }
           ]
         },
-        "demo_recording_url": "https://heytrove.ai/TODO-demo-recording",
         "commerce": false,
-        "commerce_description": "Trove does not sell products or take payments through ChatGPT. Adding a marketplace book to the library takes no payment and changes no plan."
+        "commerce_description": "Trove does not sell products or take payments through ChatGPT. Adding a marketplace book to the library takes no payment and changes no plan.",
+        "demo_recording_url": "https://screen.studio/share/udyBPeUP"
       },
       "publication": {
-        "release_notes": "Search, read and cite books in your Trove library, add and remove marketplace books, create and edit markdown documents page by page, undo edits from version history, delete books, and manage shelves, manuscripts and reader requests."
+        "release_notes": "Add librarian, item-reader, book-writer and book-enricher workflows as separate skills. In supported Work and Codex environments, delegate scoped tasks using these instructions; run them directly when delegation is unavailable. Preserve page citations, version checks and confirmation for destructive writes."
       }
     }
   }
