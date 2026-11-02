@@ -1,0 +1,28 @@
+{
+  "name": "trove-cowork",
+  "version": "1.1.5",
+  "description": "AI agent access to your Trove document library inside Claude Cowork. Research questions using your uploaded PDFs and markdown files with citations, browse and subscribe to the marketplace, and create or edit knowledge documents \u2014 all backed by a public MCP server with OAuth.",
+  "author": {
+    "name": "heytrove.ai",
+    "email": "support@heytrove.ai",
+    "url": "https://heytrove.ai"
+  },
+  "license": "MIT",
+  "keywords": [
+    "knowledge-base",
+    "documents",
+    "pdf",
+    "library",
+    "research",
+    "citations",
+    "cowork"
+  ],
+  "homepage": "https://heytrove.ai",
+  "repository": "https://github.com/CandleKeepAgents/trove-mcp",
+  "displayName": "Trove",
+  "icon": ".claude-plugin/icon.png",
+  "privacyPolicyUrl": "https://heytrove.ai/privacy",
+  "supportUrl": "https://heytrove.ai/support",
+  "documentationUrl": "https://heytrove.ai/install?surface=cowork",
+  "termsOfServiceUrl": "https://heytrove.ai/terms"
+}
