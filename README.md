@@ -8,30 +8,31 @@ This repository contains:
 
 | Folder | Contents |
 |---|---|
-| `plugins/trove-cowork/` | The Claude plugin: the `trove` skill, four sub-agents, and the Trove connector |
-| `.claude-plugin/marketplace.json` | The Claude plugin marketplace with the name `trove` |
 | `chatgpt/` | The OpenAI package: main workflow, onboarding, four specialist skills, MCP configuration and submission checklist |
 | `claude/` | The submission checklist for Anthropic's directory |
+| `.claude-plugin/marketplace.json` | The former Claude plugin marketplace `trove`. It lists no plugins. It tells existing installs that `trove-cowork` was removed. |
 
-Claude agents run in Cowork and Claude Code; ordinary Claude chat follows the same instructions directly. OpenAI packages the four roles as skills, with delegation in supported Work/Codex environments and direct execution otherwise. An MCP connector alone does not install these workflows.
+Claude uses the hosted Trove connector. The connector gives Claude the tools and the research workflow. OpenAI packages the four roles as skills, with delegation in supported Work/Codex environments and direct execution otherwise.
 
-One repository serves both stores. Anthropic reads a plugin from a folder in a GitHub repository, and a repository can hold more than one plugin folder. The Anthropic connector listing needs only the server URL. OpenAI takes a ZIP file that you upload, and it does not read a repository. The two stores use different manifest files, and each set is in its own folder, so they do not conflict.
+The Anthropic connector listing needs only the server URL. OpenAI takes a ZIP file that you upload from the `chatgpt/` folder.
 
 ## Install in Claude (claude.ai, Claude Desktop, Cowork)
 
-Plugins need a paid Claude plan (Pro, Max, Team or Enterprise).
+Use the Trove connector. It works on all Claude plans.
 
-1. Open **Customize → Plugins**. In Cowork, open the **Cowork** tab first.
-2. Click **Add → Add marketplace → Add from a repository**.
-3. Enter `CandleKeepAgents/trove-mcp`.
-4. Find **trove-cowork** in the plugin list and click **Install**.
-5. Sign in with your heytrove.ai account and click **Authorize**.
+1. Open <https://heytrove.ai/install?surface=cowork> and click **Connect to Claude**. Or, in Claude, open **Settings → Connectors → Add custom connector** and enter this URL:
 
-On the Free plan, or to use only the connector without the skill and the sub-agents, open **Settings → Connectors → Add custom connector** and enter this URL. On a Team or Enterprise plan, an owner adds it first in **Admin settings → Connectors**.
+   ```
+   https://heytrove.ai/api/v1/mcp
+   ```
 
-```
-https://heytrove.ai/api/v1/mcp
-```
+2. Sign in with your heytrove.ai account and click **Authorize**.
+
+On a Team or Enterprise plan, an owner adds the connector first in **Admin settings → Connectors**.
+
+### The trove-cowork plugin was removed
+
+We removed the `trove-cowork` plugin on 2026-11-02. If you installed it, remove it in **Customize → Plugins**. Then add the connector as shown above. You can also remove the `trove` marketplace. Your library does not change.
 
 ## Install in ChatGPT
 
@@ -107,7 +108,7 @@ Each tool tells the assistant if it only reads, if it can remove or overwrite da
 - Terms: <https://heytrove.ai/terms>
 - Support: <https://heytrove.ai/support> or support@heytrove.ai
 
-Trove does not keep a transcript of your conversation. It keeps the tool calls and three short texts that the assistant writes: a research topic, a topic that the library does not cover, and the reason for a book suggestion. The server removes emails, keys, tokens and phone numbers from these texts before it stores them. The plugin README gives more data.
+Trove does not keep a transcript of your conversation. It keeps the tool calls and three short texts that the assistant writes: a research topic, a topic that the library does not cover, and the reason for a book suggestion. The server removes emails, keys, tokens and phone numbers from these texts before it stores them. The [privacy policy](https://heytrove.ai/privacy) gives more data.
 
 ## License
 

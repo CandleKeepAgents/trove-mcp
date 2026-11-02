@@ -4,61 +4,35 @@ This checklist is for the person who submits Trove to Anthropic. Items marked **
 
 Requirements are from the Claude documentation, read on 2026-09-30:
 
-- Submit a plugin: <https://claude.com/docs/plugins/submit>
-- Plugin pre-submission checklist: <https://claude.com/docs/plugins/pre-submission-checklist>
 - Submit a connector: <https://claude.com/docs/connectors/building/submission>
 - Connector review criteria: <https://claude.com/docs/connectors/building/review-criteria>
 - Connector authentication: <https://claude.com/docs/connectors/building/authentication>
 
 Read them again before you submit.
 
-## 1. Two submissions
+## 1. The submission
 
 The portal is now at <https://claude.ai/directory/manage>. It replaces the earlier Console form (`platform.claude.com/plugins/submit`). If an earlier submission exists in the Console form, move it to the portal as the documentation tells.
 
-Make two submissions:
+Make one submission:
 
 | Submission | Portal choice | Source |
 |---|---|---|
-| The plugin (skill, 4 sub-agents, connector) | **Plugin bundle** | Repository `CandleKeepAgents/trove-mcp`, plugin path `plugins/trove-cowork`, branch `main` |
 | The MCP server | **MCP connector** | `https://heytrove.ai/api/v1/mcp` |
 
-Anthropic tells you to submit the server as a connector also, when your plugin uses a server that you operate. The connector listing gives you the server details, the authentication settings and the dashboard, and it lets you pair the server with the plugin.
+Do not submit a plugin bundle. We removed the `trove-cowork` plugin from this repository on 2026-11-02. Claude uses only the connector.
 
 - [ ] **TODO:** The submitter has a paid Claude plan and a role that can submit.
-- [ ] **TODO:** Connect the GitHub account of the submitter on claude.ai, in the same Claude organization. That account must have push access to `CandleKeepAgents/trove-mcp`.
+- [ ] **TODO:** If a plugin bundle draft or submission for `trove-cowork` exists in the portal, withdraw it.
 - [ ] **TODO:** If the old plugin (formerly called CandleKeep) has a live listing, decide if you delist it after the Trove listing is live.
 
 ### Verified submission checkpoint — 2026-10-04
 
-The portal currently has the `heytrove` **MCP server** listing in review. That connector submission does not install this repository's agent definitions. The plugin bundle must be submitted separately from `plugins/trove-cowork` on `main`; check the portal for an existing bundle draft before creating one. The four native agent files are already in `agents/` and are discovered by the Claude plugin loader.
+The portal currently has the `heytrove` **MCP server** listing in review. Validate the exact production server in the portal and complete its owner acknowledgements before submitting.
 
-Bundled agents run in Cowork and Claude Code; ordinary Claude chat uses the direct workflow fallback in the `trove` skill. See [Anthropic's host support guidance](https://support.claude.com/en/articles/13837440-use-plugins-in-claude). A local validator passing is not proof of OAuth, agent execution or successful marketplace submission. Validate the exact merged commit in the portal and complete its owner acknowledgements before submitting.
+Name risk: the portal holds a name that is only generic words. "Trove" is a dictionary word, so a reviewer can hold the listing. This is a hold, not a rejection. The name stays "Trove" (Brand Book ch. 02: no descriptors in the name); put "knowledge library" in the one-liner.
 
-## 2. Plugin bundle checks
-
-The CI workflow `.github/workflows/validate.yml` does the local checks. The portal **Validate** button does more checks.
-
-| Requirement | Status |
-|---|---|
-| Public GitHub repository | Yes: `CandleKeepAgents/trove-mcp` is public. |
-| `claude plugin validate` passes | Yes: `claude plugin validate --strict ./plugins/trove-cowork` and `claude plugin validate --strict .` pass (Claude Code 2.1.285). CI runs both. |
-| `.claude-plugin/plugin.json` in the plugin folder | Yes |
-| `name` is lowercase, hyphens, 64 characters or fewer, not a reserved word | Yes: `trove-cowork` |
-| `description`, `author`, `version` are set | Yes |
-| README of 40 words or more in the plugin folder | Yes: `plugins/trove-cowork/README.md` |
-| LICENSE in the plugin folder | Yes: MIT, holder Trove |
-| Consistent versions | Yes: `plugin.json`, `marketplace.json`, the CHANGELOG top entry and `chatgpt/plugin.json` are all the same version (now 1.1.4). CI fails if they differ. |
-| Remote MCP server has `type: http` and an `https://` URL | Yes |
-| No `.DS_Store` or other OS files | CI fails if one is present. |
-| No hooks, scripts, launchers or lockfiles | Yes. The plugin is only Markdown and JSON, so nothing is held for a reviewer for this reason. |
-| Skill and agent files have YAML front matter with a text `description` | Yes |
-
-Raise `version` in `plugin.json` and `marketplace.json`, and add a CHANGELOG entry, for each release. The directory follows the tracked branch and scans each new commit.
-
-Name risk: the portal holds a name that is only generic words. "Trove" is a dictionary word, so a reviewer can hold the plugin. This is a hold, not a rejection. The name stays "Trove" (Brand Book ch. 02: no descriptors in the name); put "knowledge library" in the one-liner.
-
-## 3. Connector checks
+## 2. Connector checks
 
 - [x] **Tool annotations — done.** Each tool must have a `title` and the applicable `readOnlyHint` or `destructiveHint`. The server sends a `title` and all four hints on each of its 38 tools. The values are in `chatgpt/SUBMISSION.md`, section 5. In Claude, read-only tools run without a confirmation for each call, and destructive tools always ask.
 - [ ] **TODO — tool descriptions.** A description must tell what the tool does. It must not tell Claude how to behave, and it must not promote a product. Examine these:
@@ -70,7 +44,7 @@ Name risk: the portal holds a name that is only generic words. "Trove" is a dict
 - [ ] Every tool returns a useful error, not only "Internal Server Error". Check each tool with the MCP Inspector.
 - [ ] **TODO — test in Claude.** Add `https://heytrove.ai/api/v1/mcp` as a custom connector and call each tool. The portal asks you to confirm this.
 
-## 4. Authentication
+## 3. Authentication
 
 Claude supports OAuth with dynamic client registration (DCR) by default. Trove has DCR at `https://heytrove.ai/api/oauth/register` and PKCE with `S256`. In the portal **Authentication** step, select OAuth with dynamic client registration.
 
@@ -88,7 +62,7 @@ Claude supports OAuth with dynamic client registration (DCR) by default. Trove h
 
 Note: with DCR, Claude registers a new client for each new connection. If the directory brings much traffic, add Client ID Metadata Document support. Advertise `"client_id_metadata_document_supported": true` and `"none"` in `token_endpoint_auth_methods_supported`.
 
-## 5. Listing materials
+## 4. Listing materials
 
 Connector listing (portal **Listing** step):
 
@@ -96,7 +70,7 @@ Connector listing (portal **Listing** step):
 |---|---|
 | Server name (100 characters) | Trove |
 | One-liner (200 characters) | Your AI's knowledge library: search, read and cite your books to the page, add marketplace books, and write knowledge documents. |
-| Description (2000 characters) | **TODO:** write it. Start from `plugins/trove-cowork/README.md`. Anthropic cannot edit it after you submit. |
+| Description (2000 characters) | **TODO:** write it. Start from the repository `README.md`. Anthropic cannot edit it after you submit. |
 | Categories (1 to 5) | **TODO:** for example Knowledge, Productivity, Research |
 | Documentation URL | https://heytrove.ai/install?surface=cowork |
 | Support page | https://heytrove.ai/support (public, no sign-in; monorepo PR 510) |
@@ -108,7 +82,7 @@ Connector listing (portal **Listing** step):
 
 The connector has no interactive UI (it is not an MCP App), so it does not need carousel screenshots.
 
-## 6. Test account for reviewers
+## 5. Test account for reviewers
 
 - [ ] **TODO:** Make a dedicated, fully populated review account on heytrove.ai. Enter its credentials only in the portal **Test & launch** step. Do not put them in the repository.
 - [ ] Give it a Pro plan, so that no example stops at a limit.
@@ -120,28 +94,27 @@ The connector has no interactive UI (it is not an MCP App), so it does not need 
 - [ ] Write the sign-in steps so that a reviewer can connect with no help.
 - [ ] Note for the sign-in steps: until the rebrand flip, sign-in on heytrove.ai goes through getcandlekeep.com, the domain of CandleKeep, the former name of Trove (heytrove.ai is a Clerk satellite of it). The reviewer sees a getcandlekeep.com sign-in page and then returns to heytrove.ai. Say this in the sign-in steps, so that the reviewer does not think that the redirect is an error.
 
-## 7. Example prompts (3 or more)
+## 6. Example prompts (3 or more)
 
-These are in the plugin README. Run each with the review account before you submit.
+These are in the repository README. Run each with the review account before you submit.
 
 1. "What does my library say about testing for SQL injection? Cite the pages." Expected: the answer cites the OWASP Web Security Testing Guide v4.2 with page numbers.
 2. "I need to get up to speed on Prisma. Check the Trove marketplace, add the best book, and summarise how it handles migrations." Expected: adds "Prisma ORM 7 Complete Reference" and cites it.
 3. "Draft a knowledge doc called "On-Call Escalation Policy" covering our rotation and severity levels. Then add a section on paging escalation."
-4. "My library has a book called scan_001.pdf with no author. Clean up its metadata." Expected: the enricher sets a real title and author.
+4. "My library has a book called scan_001.pdf with no author. Clean up its metadata." Expected: Claude sets a real title and author.
 
-## 8. Data handling and compliance answers
+## 7. Data handling and compliance answers
 
 | Question | Answer |
 |---|---|
 | Reads or stores personal data | Yes. It reads the library of the connected account. It stores tool calls and three short agent-written texts: a research topic, a gap topic, a book-suggestion reason. The server removes emails, keys, tokens and phone numbers from these texts. |
-| Sends data to other services | No. The plugin sends data only to its declared connector, `https://heytrove.ai/api/v1/mcp`. The plugin README discloses this destination and the data sent. |
+| Sends data to other services | No. The connector is the Trove server, `https://heytrove.ai/api/v1/mcp`, and it sends no data to other services. The privacy policy discloses the data that it keeps. |
 | Retention | Done: the retention periods are in the "Data Retention" section of <https://heytrove.ai/privacy> (monorepo PR 510). |
 | For people under 18 | **TODO:** decide. |
 | API ownership | First-party API |
 | Financial transactions | None. `subscribe_marketplace` adds a book to the library. It takes no payment and changes no plan. |
 | Contact email | support@heytrove.ai (receives mail) |
 
-## 9. After publication
+## 8. After publication
 
-- The directory scans each new commit on `main`. Set up the GitHub push webhook in the portal, so that the scan starts at each push.
 - Email `mcp-review@anthropic.com` for connector escalations. Email `directory@anthropic.com` if another organization has submitted this repository.
