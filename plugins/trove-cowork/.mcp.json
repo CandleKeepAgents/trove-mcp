@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "trove": {
+      "type": "http",
+      "url": "https://heytrove.ai/api/v1/mcp"
+    }
+  }
+}
