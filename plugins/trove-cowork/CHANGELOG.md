@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.5 — No summary box after answers
+
+- Answers end right after the answer. The boxed Trove summary (Read, Learned, How it helped, Worth remembering) is removed. Inline page citations stay, so every claim can still be checked.
+- The Locked content upgrade box stays and is the only element that may follow an answer.
+
 ## 1.1.4 — Specialist workflows across plugin hosts
 
 - Keep the four native Claude agents in the plugin bundle and add direct execution when ordinary Claude chat has no Agent tool.

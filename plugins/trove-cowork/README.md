@@ -46,7 +46,7 @@ The four subagents:
 | **book-writer** | Creates and edits markdown books in your library — new knowledge docs, new chapters, single-page revisions, and updates to your manuscripts. It also undoes edits from version history, deletes books (after you confirm), and manages your shelves and manuscripts. |
 | **book-enricher** | Cleans up thin metadata in the background: a book that came in as `scan_001.pdf` with no author and no table of contents gets a real title, author and TOC. |
 
-A typical research turn: the skill orients itself with a library summary → spawns the **librarian** → hands its reading list verbatim to the **item-reader** → folds the findings into an answer with a citation block. Broad questions get split across several readers running in parallel.
+A typical research turn: the skill orients itself with a library summary → spawns the **librarian** → hands its reading list verbatim to the **item-reader** → folds the findings into an answer that cites each book and page inline. Broad questions get split across several readers running in parallel.
 
 Everything runs through the connector. Cowork has no shell and no filesystem, so there is no CLI to install and nothing written to your machine.
 
@@ -60,7 +60,7 @@ The skill activates from plain language — no slash command needed. Concrete pr
 
 > What does my library say about testing for SQL injection? Cite the pages.
 
-The librarian picks the two or three books that actually cover it, the reader pulls the relevant pages, and you get an answer with a citation block listing each book and page range consulted — so you can verify every claim.
+The librarian picks the two or three books that actually cover it, the reader pulls the relevant pages, and you get an answer that cites each book and page inline, so you can verify every claim.
 
 **2. Find and add a book from the marketplace**
 
