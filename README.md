@@ -35,15 +35,13 @@ https://heytrove.ai/api/v1/mcp
 
 ## Install in ChatGPT
 
-Until Trove is in the ChatGPT app directory, connect it in developer mode. Developer mode needs a paid ChatGPT plan (Plus, Pro, Business, Enterprise or Edu) and works on the web. On a Business or Enterprise workspace, an admin turns it on first.
+Trove is in ChatGPT's app directory.
 
-1. Open **Settings → Security and login** and turn on **Developer mode**.
-2. Open **Plugins** and click **+**.
-3. Enter the name `Trove` and the server URL `https://heytrove.ai/api/v1/mcp`. Keep **OAuth** as the authentication.
-4. Sign in with your heytrove.ai account and click **Authorize**.
-5. In a new chat, type **@** and select **Trove**.
+1. Open [Trove in ChatGPT](https://chatgpt.com/plugins/plugin_asdk_app_6abebdc0ae2081918d5b611672dfae0e?open_in_app) and click **Connect**.
+2. Sign in with your heytrove.ai account and click **Authorize**.
+3. In a new chat, type **@** and select **Trove**.
 
-After Trove is in the app directory, find **Trove** there and click **Connect**.
+On a Business, Enterprise or Edu workspace, an admin may need to allow Trove first.
 
 ## Tools
 
